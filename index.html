@@ -1,0 +1,101 @@
+﻿<!DOCTYPE html>
+<html>
+	<head>
+		<title> Teste </title>
+		<meta charset="UTF-8" />
+		<script src="jquery.js"></script>
+	</head>
+	<body onload="ExibirConsole(document.getElementById('executa')); startRender()">
+		<input type="button" value="Executar" style="float:right; position:relative; top:212px; right:74px; margin-right:-50px;" onclick="document.getElementById('executa').src='executar'; desenharCanvas();" />
+		<a href="baixar/main.py" download>
+			<Button style="float:right; position:relative; top:212px; right:30%; margin-right:-50px;" >Baixar</button>
+		</a>
+		<iframe id='executa' style="width:30%; float:right; height:200px; background:#000000;" ></iframe>
+		
+		<canvas id="renderLinhas" style="position:absolute; top:284px; right:31px; height:400px; width:400px; border:1px solid #f4b; background-color:#ffc" ></canvas>
+		
+		<iframe style="width:65%;height:1px" id="render" ></iframe>
+		
+		<script>
+			var mycanvas = document.getElementById('renderLinhas');
+			var cont = mycanvas.getContext("2d");
+			cont.translate(mycanvas.width/2-120, mycanvas.height - 20);
+			cont.scale(0.5, -0.5);
+			
+			function ExibirConsole(e){
+				e.contentDocument.body.innerHTML='<p style="color:#FFFFFF; font-style:italic;">Clique no botão executar para ver o resultado do código</p>'
+			}
+			
+			function startRender(){
+				var e = document.getElementById('render');
+				e.src = "render";
+			
+				setTimeout('startRender()', 800);
+			}
+			
+			function desenharCanvas(){
+				$.ajax({
+					url: 'grafico',
+					type: "get",
+					cache:false,
+					dataType: "json",
+					success: function(data){
+						cont.clearRect(0, 0, mycanvas.width, mycanvas.height);
+						
+						for (var j=0, t=10; data[j]; j+=1, t+=50){
+							var imgsSvg = data[j];
+							
+							cont.save();
+							cont.beginPath();
+							cont.fillRect(t+(j*50)+30, 0, 20, imgsSvg[0].qtIguais*10+20);
+							cont.font="20px Arial";
+							cont.scale(1, -1);
+							cont.fillText(imgsSvg[0].imagem, t+(j*50), 30);
+							cont.restore();
+						}
+							/*
+							cont.beginPath();
+							
+							cont.arc(imgsSvg[j].x, imgsSvg[j].y, 2, 0, 2 * Math.PI, false);
+							
+							for(var i=0; i<imgsSvg.length-1; i+=1){
+								cont.moveTo(imgsSvg[i].x, imgsSvg[i].y);
+								cont.lineTo(imgsSvg[i+1].x, imgsSvg[i+1].y);
+								cont.arc(imgsSvg[i+1].x, imgsSvg[i+1].y, 2, 0, 2 * Math.PI, false);
+								console.log(imgsSvg[i]);
+							}
+
+							cont.moveTo(imgsSvg[imgsSvg.length-1].x, imgsSvg[imgsSvg.length-1].y);
+							cont.lineTo(imgsSvg[j].x, imgsSvg[j].y);
+							cont.strokeStyle = getCor();
+							cont.stroke();
+						}
+						
+						*/
+						//cont.beginPath();
+						
+						/*
+						for(var i=0; i<data.imagem2.length-1; i+=1){
+							cont.moveTo(data.imagem2[i].x, data.imagem2[i].y);
+							cont.lineTo(data.imagem2[i+1].x, data.imagem2[i+1].y);
+							console.log(data.imagem2[i].x);
+						}
+						*/
+						
+						//cont.strokeStyle = getCor();
+						//cont.stroke();
+					}
+				})
+			}
+			
+			function getCor(){
+				var letters = '0123456789ABCDEF'.split('');
+				var color = '#';
+				for (var i = 0; i < 6; i++ ) {
+					color += letters[Math.floor(Math.random() * 16)];
+				}
+				return color;
+			}
+		</script>
+	</body>
+</html>
