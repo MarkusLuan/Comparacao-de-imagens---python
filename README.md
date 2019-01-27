@@ -2,8 +2,8 @@
 Necessario ter o python 3
 
 Bibliotecas usadas: os, json, math, flask, subprocess, time
-instale o flask com o comando
 
+instale o flask com o comando:
 python -m pip install flask
 
 Compara-se imagens svg a imagem teste.svg, calculando as distancia de 50 pontos ao centroide de cada imagem.
